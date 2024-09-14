@@ -1,11 +1,10 @@
 /*
-	This is common for all the tables in property panel.
-	Just create new JiffyTable and pass the required settings.
+	Just create new HashTable and pass the required settings.
 	@author: Sri Harsha
 */
-class JiffyTable{
+class HashTable{
 	constructor(settings){
-		this._type = "JiffyTable"
+		this._type = "HashTable"
 		this.addDefaultSettings();
 		this.settings = {...this.defaultSettings, ...settings};
 		this.parent_element = settings.container;
@@ -73,10 +72,10 @@ class JiffyTable{
 	};
 
 	createChildren(){
-		this.table_contents["table_main_head"] = new JiffyTableMainHeadRow(this.settings, this.view_element);
-		this.table_contents["table_head"] = new JiffyTableHead(this.settings, this.view_element);
-		this.table_contents["table_body"] = new JiffyTableBody(this.settings, this.view_element);
-		this.table_contents["table_footer"] = new JiffyTableFooter(this.settings, this.view_element);
+		this.table_contents["table_main_head"] = new HashTableMainHeadRow(this.settings, this.view_element);
+		this.table_contents["table_head"] = new HashTableHead(this.settings, this.view_element);
+		this.table_contents["table_body"] = new HashTableBody(this.settings, this.view_element);
+		this.table_contents["table_footer"] = new HashTableFooter(this.settings, this.view_element);
 	};
 
 	drawTable(){
@@ -157,13 +156,13 @@ class JiffyTable{
 	};
 }
 
-class JiffyTableMainHeadRow{
+class HashTableMainHeadRow{
 	constructor(settings, parent_element){
 		// This row has no cells
 		this.settings = settings;
 		this.parent_element = parent_element;
 		this.view_element = this.initialize();
-		this._type = "JiffyTableMainHeadingRow";
+		this._type = "HashTableMainHeadingRow";
 		this.addTemplates();
 
 		// render row
@@ -436,16 +435,16 @@ class JiffyTableMainHeadRow{
 	}
 }
 
-class JiffyTableHead{
+class HashTableHead{
 	constructor(settings, parent_element){
 		// Basic attributes
-		this._type = "JiffyTableHead"
+		this._type = "HashTableHead"
 		this.settings = settings;
 		this.parent_element = parent_element;
 		this.view_element = this.initialize();
 		// Attributes related to content
 		this.rows = [];
-		this.row_factory = new JiffyTableRowFactory();
+		this.row_factory = new HashTableRowFactory();
 		this.attachToParent();
 		this.addRows();
 	};
@@ -466,16 +465,16 @@ class JiffyTableHead{
 	};
 }
 
-class JiffyTableBody{
+class HashTableBody{
 	constructor(settings, parent_element){
 		// Basic attributes
-		this._type = "JiffyTableBody"
+		this._type = "HashTableBody"
 		this.settings = settings;
 		this.parent_element = parent_element;
 		this.view_element = this.initialize();
 		// Attributes related to content
 		this.rows = [];
-		this.row_factory = new JiffyTableRowFactory();
+		this.row_factory = new HashTableRowFactory();
 		this.attachToParent();
 	};
 
@@ -505,9 +504,9 @@ class JiffyTableBody{
 	};
 }
 
-class JiffyTableFooter{
+class HashTableFooter{
 	constructor(settings, parent_element){
-		this._type = "JiffyTableFooter"
+		this._type = "HashTableFooter"
 		this.settings = settings;
 		this.parent_element = parent_element;
 		this.view_element = this.initialize();
@@ -596,22 +595,22 @@ class JiffyTableFooter{
 	};
 }
 
-class JiffyTableRowFactory{
+class HashTableRowFactory{
 	createRow(settings, parent_element, type, rows_data=[]) {
-		if(type == "JiffyTableHead"){
-			return new JiffyTableHeadRow(settings, parent_element);
+		if(type == "HashTableHead"){
+			return new HashTableHeadRow(settings, parent_element);
 		}
-		if(type == "JiffyTableBody"){
+		if(type == "HashTableBody"){
 			let body_rows = [];
 			rows_data.forEach(row_data => {
-				body_rows.push(new JiffyTableBodyRow(settings, parent_element, row_data));
+				body_rows.push(new HashTableBodyRow(settings, parent_element, row_data));
 			});
 			return body_rows;
 		}
 	};
 }
 
-class JiffyTableRow{
+class HashTableRow{
 	constructor(settings, parent_element){
 		this.settings = settings;
 		this.parent_element = parent_element;
@@ -643,14 +642,14 @@ class JiffyTableRow{
 	};
 }
 
-class JiffyTableHeadRow extends JiffyTableRow{
+class HashTableHeadRow extends HashTableRow{
 	constructor(settings, parent_element){
 		super(settings, parent_element);
-		this._type = "JiffyTableHeadRow"
+		this._type = "HashTableHeadRow"
 		this.view_element.addClass("jiffy-table-head-row");
 		this.view_element.css("grid-template-rows", this.settings.head_row_height);
 		// for cells in row
-		this.cell_factory = new JiffyTableCellFactory();
+		this.cell_factory = new HashTableCellFactory();
 		this.drawRow();
 	};
 
@@ -666,15 +665,15 @@ class JiffyTableHeadRow extends JiffyTableRow{
 	};
 }
 
-class JiffyTableBodyRow extends JiffyTableRow{
+class HashTableBodyRow extends HashTableRow{
 	constructor(settings, parent_element, row_data){
 		super(settings, parent_element);
-		this._type = "JiffyTableBodyRow"
+		this._type = "HashTableBodyRow"
 		this.view_element.addClass(`jiffy-table-body-row ${this.settings.table_id}_body_row`);
 		this.view_element.css("grid-template-rows", this.settings.body_row_height);
 		this.row_data = row_data;
 		// for cells in row
-		this.cell_factory = new JiffyTableCellFactory();
+		this.cell_factory = new HashTableCellFactory();
 		this.cells = [];
 		this.attachToParent();
 		this.drawRow();
@@ -701,19 +700,19 @@ class JiffyTableBodyRow extends JiffyTableRow{
 	};
 }
 
-class JiffyTableCellFactory{
+class HashTableCellFactory{
 	createCell(settings, parent_element, cell_info, type){
 		let cell_obj;
-		if(type == "JiffyTableHeadRow"){
-			cell_obj = new JiffyTableHeadCell(settings, parent_element, cell_info);
-		}else if(type == "JiffyTableBodyRow"){
-			cell_obj = new JiffyTableBodyCell(settings, parent_element, cell_info);
+		if(type == "HashTableHeadRow"){
+			cell_obj = new HashTableHeadCell(settings, parent_element, cell_info);
+		}else if(type == "HashTableBodyRow"){
+			cell_obj = new HashTableBodyCell(settings, parent_element, cell_info);
 		}
 		return cell_obj;
 	};
 }
 
-class JiffyTableCell{
+class HashTableCell{
 	constructor(settings, parent_element, cell_info){
 		this.settings = settings;
 		this.cell_info = cell_info;
@@ -746,10 +745,10 @@ class JiffyTableCell{
 	addTemplates(){};
 }
 
-class JiffyTableHeadCell extends JiffyTableCell{
+class HashTableHeadCell extends HashTableCell{
 	constructor(settings, parent_element, cell_info){
 		super(settings, parent_element, cell_info);
-		this._type = "JiffyTableHeadCell";
+		this._type = "HashTableHeadCell";
 		this.addDefaultSettings();
 		this.addTemplates();
 		this.cell_info = {...this.defaults, ...this.cell_info};
@@ -808,10 +807,10 @@ class JiffyTableHeadCell extends JiffyTableCell{
 	};
 }
 
-class JiffyTableBodyCell extends JiffyTableCell{
+class HashTableBodyCell extends HashTableCell{
 	constructor(settings, parent_element, cell_info){
 		super(settings, parent_element, cell_info);
-		this._type = "JiffyTableBodyCell";
+		this._type = "HashTableBodyCell";
 		this.addTemplates();
 		this.addContent();
 		this.attachToParent();
